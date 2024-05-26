@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav>
+            <img src="media/logo.png" id="logo">
+            <ul>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="campaign.html">Campaigns</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <header class="header" id="header-image">
+        <h2>Your Profile</h2>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-image" id="profile-image">
+            <img src="media/default-profile.jpg" alt="Profile Photo">
+        </div>
+        <div class="profile-details">
+            <h1 id="profile-name"></h1>
+            <p id="profile-email"></p>
+            <p id="profile-sex"></p>
+        </div>
+        <div class="profile-content">
+            <h3>Reason for Support</h3>
+            <p id="profile-reason"></p>
+        </div>
+        <div class="upload-section">
+            <label for="upload-profile-picture">Upload Profile Picture:</label>
+            <input type="file" id="upload-profile-picture" accept="image/*">
+            <br>
+            <label for="upload-header-picture">Upload Header Picture:</label>
+            <input type="file" id="upload-header-picture" accept="image/*">
+            <br>
+            <button class="button" onclick="savePictures()">Save Pictures</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var formData = JSON.parse(localStorage.getItem('formData'));
+
+            if (formData) {
+                document.getElementById('profile-name').textContent = formData.firstName + ' ' + formData.lastName;
+                document.getElementById('profile-email').textContent = formData.email;
+                document.getElementById('profile-sex').textContent = formData.sex;
+                document.getElementById('profile-reason').textContent = formData.supportReason;
+            }
+
+            var profilePicture = localStorage.getItem('profilePicture');
+            var headerPicture = localStorage.getItem('headerPicture');
+
+            if (profilePicture) {
+                document.getElementById('profile-image').querySelector('img').src = profilePicture;
+            }
+
+            if (headerPicture) {
+                document.getElementById('header-image').style.backgroundImage = `url(${headerPicture})`;
+            }
+        });
+
+        function savePictures() {
+            const profilePictureInput = document.getElementById('upload-profile-picture').files[0];
+            const headerPictureInput = document.getElementById('upload-header-picture').files[0];
+
+            if (profilePictureInput) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('profilePicture', e.target.result);
+                    document.getElementById('profile-image').querySelector('img').src = e.target.result;
+                };
+                reader.readAsDataURL(profilePictureInput);
+            }
+
+            if (headerPictureInput) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localStorage.setItem('headerPicture', e.target.result);
+                    document.getElementById('header-image').style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(headerPictureInput);
+            }
+        }
+    </script>
+
+</body>
+</html>
